@@ -1,9 +1,11 @@
 #include "cell.h"
 
-Cell::Cell(int row, int column, int value):
+Cell::Cell(int row, int column, int value) :
     m_row(row),
     m_column(column),
-    m_value(value) { }
+    m_value(value)
+{
+}
 
 int Cell::getColumn() const
 {

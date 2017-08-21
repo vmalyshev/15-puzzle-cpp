@@ -2,6 +2,7 @@
 #define GAMEMODEL_H
 
 #include <QAbstractListModel>
+
 #include <memory.h>
 
 #include <gameutility.h>
@@ -10,9 +11,9 @@ class GameModel : public QAbstractListModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(int fieldSize READ getFieldSize CONSTANT)
+    Q_PROPERTY(int fieldSize READ getGameFieldSize CONSTANT)
 public:
-    explicit GameModel(QObject *parent = 0);
+    explicit GameModel(QObject *parent = nullptr);
 
     enum Roles {
         Row = Qt::UserRole + 1,
@@ -27,11 +28,11 @@ public:
     Q_INVOKABLE void shuffleCells();
     Q_INVOKABLE void checkNeighbours(int index);
 
-    int getFieldSize() const;
+    int getGameFieldSize() const;
 
     ~GameModel();
 private:
-    void swapItem(int from, int to);
+    void swapItem(int fromPosition, int toPosition);
 
     std::shared_ptr<GameUtility> m_utility;
 signals:

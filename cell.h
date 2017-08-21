@@ -3,9 +3,6 @@
 
 class Cell
 {
-    int m_row;
-    int m_column;
-    int m_value;
 public:
     Cell(int row, int column, int value);
 
@@ -19,6 +16,10 @@ public:
     void setRow(int value);
 
     ~Cell();
+private:
+    int m_row;
+    int m_column;
+    int m_value;
 };
 
 #endif // CELL_H

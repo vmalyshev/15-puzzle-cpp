@@ -1,6 +1,6 @@
 #include "gamemodel.h"
 
-GameModel::GameModel(QObject *parent):
+GameModel::GameModel(QObject *parent) :
     QAbstractListModel(parent)
 {
     m_utility = std::shared_ptr<GameUtility> (new GameUtility());
@@ -9,7 +9,7 @@ GameModel::GameModel(QObject *parent):
 int GameModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return m_utility->getCellsSize();
+    return m_utility->getCellsCollectionSize();
 }
 
 QVariant GameModel::data(const QModelIndex &index, int role) const
@@ -46,7 +46,7 @@ QHash<int, QByteArray> GameModel::roleNames() const
 void GameModel::shuffleCells()
 {
     beginResetModel();
-    m_utility->shuffleCells();
+    m_utility->shuffleCellsCollection();
     endResetModel();
 }
 
@@ -65,28 +65,49 @@ void GameModel::checkNeighbours(int index)
     }
 }
 
-void GameModel::swapItem(int from, int to)
+int GameModel::getGameFieldSize() const
 {
-    int max = std::max(from, to);
-    int min = std::min(from, to);
-
-
-    beginMoveRows(QModelIndex(), max, max, QModelIndex(), min);
-    m_utility->swapCells(from, to);
-    endMoveRows();
-
-    if (max - min > 1) {
-        beginMoveRows(QModelIndex(), min + 1, min + 1, QModelIndex(), max + 1);
-        endMoveRows();
-    }
-}
-
-int GameModel::getFieldSize() const
-{
-    return m_utility->getMapSetting();
+    return m_utility->getMapSettings();
 }
 
 GameModel::~GameModel()
 {
 
+}
+
+void GameModel::swapItem(int fromPosition, int toPosition)
+{
+    int rowStartObject = fromPosition / getGameFieldSize();
+    int columnStartObject = fromPosition % getGameFieldSize();
+
+    int rowFinishObject = toPosition / getGameFieldSize();
+    int columnFinishObject = toPosition % getGameFieldSize();
+
+    if (rowStartObject == rowFinishObject) {
+        if (toPosition > fromPosition) {
+            beginMoveRows(QModelIndex(), fromPosition, fromPosition, QModelIndex(), toPosition+1);
+        } else {
+            beginMoveRows(QModelIndex(), fromPosition, fromPosition, QModelIndex(), toPosition);
+        }
+        m_utility->swapCells(fromPosition, toPosition);
+        endMoveRows();
+    }
+
+    if (columnStartObject == columnFinishObject) {
+        if(toPosition > fromPosition) {
+            beginMoveRows(QModelIndex(), fromPosition, fromPosition, QModelIndex(), toPosition + 1);
+            m_utility->swapCells(fromPosition, toPosition);
+            endMoveRows();
+
+            beginMoveRows(QModelIndex(), toPosition - 1, toPosition - 1, QModelIndex(), fromPosition);
+            endMoveRows();
+        } else {
+            beginMoveRows(QModelIndex(), fromPosition, fromPosition, QModelIndex(), toPosition);
+            m_utility->swapCells(fromPosition, toPosition);
+            endMoveRows();
+
+            beginMoveRows(QModelIndex(), toPosition + 1, toPosition + 1, QModelIndex(), fromPosition + 1);
+            endMoveRows();
+        }
+    }
 }

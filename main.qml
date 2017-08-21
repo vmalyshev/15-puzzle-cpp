@@ -14,48 +14,54 @@ Window {
     property int cellSize: height / gameFieldModel.fieldSize;
 
     GameModel {
-        id: gameFieldModel;
+        id: gameFieldModel
 
         onUserWon: {
-            msgCongratulation.visible = true
+            msgCongratulation.visible = true;
         }
     }
 
     MessageDialog {
         id: msgCongratulation
-        title: "Notification"
+        visible: false
+
         text: "You win"
+        title: "Notification"
+
         onAccepted: {
             gameFieldModel.shuffleCells();
         }
-        Component.onCompleted: visible = false
     }
 
     Item {
         id: gameField
-        width: parent.height;
-        height: parent.height;
+
+        width: parent.height
+        height: parent.height
 
         GridView {
             id: gameBoard
-            anchors.fill: parent;
-            cellHeight: cellSize;
-            cellWidth: cellSize;
-            model: gameFieldModel;
+            model: gameFieldModel
+
+            cellHeight: cellSize
+            cellWidth: cellSize
+
+            anchors.fill: parent
 
             delegate: Cell {
-                height: gameBoard.cellHeight;
-                width: gameBoard.cellWidth;
+                height: gameBoard.cellHeight
+                width: gameBoard.cellWidth
 
                 onItemSelected: {
-                    gameFieldModel.checkNeighbours(num)
+                    gameFieldModel.checkNeighbours(num);
                 }
             }
 
             move: Transition {
                 NumberAnimation {
-                    properties: "x,y";
-                    duration: 100;
+                    properties: "x,y"
+                    easing.type: Easing.InOutBack
+                    duration: 250
                 }
             }
         }
