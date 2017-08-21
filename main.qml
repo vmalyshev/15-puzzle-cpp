@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
+import QtQuick.Dialogs 1.2
 
 import Game.ua 1.0
 
@@ -16,9 +17,18 @@ Window {
         id: gameFieldModel;
 
         onUserWon: {
-            gameFieldModel.shuffleCells();
-            console.log("you win")
+            msgCongratulation.visible = true
         }
+    }
+
+    MessageDialog {
+        id: msgCongratulation
+        title: "Notification"
+        text: "You win"
+        onAccepted: {
+            gameFieldModel.shuffleCells();
+        }
+        Component.onCompleted: visible = false
     }
 
     Item {

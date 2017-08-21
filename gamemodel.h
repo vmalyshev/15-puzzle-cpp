@@ -1,11 +1,10 @@
 #ifndef GAMEMODEL_H
 #define GAMEMODEL_H
 
+#include <QAbstractListModel>
 #include <memory.h>
 
 #include <gameutility.h>
-
-#include <QAbstractListModel>
 
 class GameModel : public QAbstractListModel
 {
@@ -28,13 +27,13 @@ public:
     Q_INVOKABLE void shuffleCells();
     Q_INVOKABLE void checkNeighbours(int index);
 
-    ~GameModel();
-
     int getFieldSize() const;
-private:
-    std::shared_ptr<GameUtility> m_utility;
 
+    ~GameModel();
+private:
     void swapItem(int from, int to);
+
+    std::shared_ptr<GameUtility> m_utility;
 signals:
     void userWon();
 };

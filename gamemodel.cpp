@@ -1,8 +1,5 @@
 #include "gamemodel.h"
 
-#include <QObject>
-#include <QDebug>
-
 GameModel::GameModel(QObject *parent):
     QAbstractListModel(parent)
 {
@@ -73,9 +70,9 @@ void GameModel::swapItem(int from, int to)
     int max = std::max(from, to);
     int min = std::min(from, to);
 
-    m_utility->swapCells(from, to);
 
     beginMoveRows(QModelIndex(), max, max, QModelIndex(), min);
+    m_utility->swapCells(from, to);
     endMoveRows();
 
     if (max - min > 1) {
@@ -84,12 +81,12 @@ void GameModel::swapItem(int from, int to)
     }
 }
 
-GameModel::~GameModel()
-{
-
-}
-
 int GameModel::getFieldSize() const
 {
     return m_utility->getMapSetting();
+}
+
+GameModel::~GameModel()
+{
+
 }
